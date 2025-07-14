@@ -1,20 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chatbot Platform
+
+A configurable chatbot platform built with Next.js, React, Redux Toolkit, and Socket.IO for real-time communication.
+
+## Features
+
+- **Real-time WebSocket Communication**: Live messaging with typing indicators
+- **Role-based Authentication**: Admin and user roles with different access levels
+- **Configurable Chatbot Flows**: Create custom conversation flows
+- **Voice Support**: Text-to-speech and speech-to-text capabilities
+- **Analytics Dashboard**: Track conversation metrics and performance
+- **Dark Mode**: Full dark mode support across the application
+- **Export/Import**: Save and load chatbot configurations
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+And start the WebSocket server (in a separate terminal):
+
+```bash
+npm run server
+```
+
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
+
+## WebSocket Testing
+
+Visit `/test-websocket` to test the real-time messaging functionality. The test page includes:
+
+- Connection status indicators
+- Real-time message sending and receiving
+- Typing indicators
+- Message history display
+
+## Voice Features Testing
+
+Visit `/voice-test` to test the advanced voice functionality. The test page includes:
+
+- **Speech Recognition**: Real-time voice input with interim results
+- **Text-to-Speech**: Convert text to speech with customizable settings
+- **Voice Settings**: Configure language, voice type, pitch, rate, and volume
+- **Voice Commands**: Control the system with voice commands
+- **Bot/User Voice Differentiation**: Different voice settings for bot and user messages
+- **Multi-language Support**: Support for multiple languages and voices
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
