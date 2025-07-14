@@ -12,6 +12,29 @@ A configurable chatbot platform built with Next.js, React, Redux Toolkit, and So
 - **Dark Mode**: Full dark mode support across the application
 - **Export/Import**: Save and load chatbot configurations
 
+## Login Instructions
+
+To access the application, you must log in with one of the following credentials:
+
+- **Admin Login**
+
+  - Username: `admin`
+  - Password: `adminpass`
+  - Access: Admin dashboard and bot configuration at `/admin`
+
+- **User Login**
+  - Username: `user`
+  - Password: `userpass`
+  - Access: Chat interface at `/chat`
+
+**How to log in:**
+
+1. Start the app and navigate to [http://localhost:3000/auth/login](http://localhost:3000/auth/login).
+2. Enter your username and password from above.
+3. You will be redirected to the appropriate dashboard based on your role.
+
+If you try to access a protected route without logging in, you will be redirected to the login page.
+
 ## Getting Started
 
 First, install dependencies:
