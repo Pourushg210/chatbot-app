@@ -6,6 +6,7 @@ import { RootState } from "@/store/store";
 import VoiceSettings from "./VoiceSettings";
 import { useRouter } from "next/navigation";
 import voiceService from "@/services/voiceService";
+import { useWebSocket } from "@/hooks/useWebSocket";
 
 export default function ChatInterface() {
   const [inputMessage, setInputMessage] = useState("");
@@ -15,8 +16,9 @@ export default function ChatInterface() {
   const [interimTranscript, setInterimTranscript] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { currentConversation, isTyping, isConnected, connectionStatus } =
-    useSelector((state: RootState) => state.chat);
+  const { currentConversation, isTyping, isConnected } = useSelector(
+    (state: RootState) => state.chat
+  );
   const { currentConfiguration, configurations } = useSelector(
     (state: RootState) => state.chatbot
   );
@@ -33,6 +35,11 @@ export default function ChatInterface() {
   const [sessionEnded, setSessionEnded] = useState(false);
   const router = useRouter();
   const { role } = useSelector((state: RootState) => state.auth);
+  const {
+    isConnected: wsIsConnected,
+    sendMessage,
+    sendTypingIndicator,
+  } = useWebSocket();
 
   useEffect(() => {
     // Check if Web Speech API is supported
@@ -70,6 +77,15 @@ export default function ChatInterface() {
       ...prev,
       { sender: "user", content: answer, id: `user-${flow.id}` },
     ]);
+    // Send message via WebSocket if connected and conversation exists
+    if (wsIsConnected && currentConversation) {
+      sendMessage({
+        content: answer,
+        sender: "user",
+        type: "text",
+        conversationId: currentConversation.id,
+      });
+    }
     // Find next unanswered question
     let nextStep = currentStep + 1;
     while (
@@ -204,7 +220,12 @@ export default function ChatInterface() {
           <input
             type="text"
             value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
+            onChange={(e) => {
+              setInputMessage(e.target.value);
+              if (wsIsConnected && currentConversation) {
+                sendTypingIndicator(currentConversation.id, true);
+              }
+            }}
             className="flex-1 px-4 py-2 border rounded"
             placeholder={
               isListening
@@ -237,7 +258,9 @@ export default function ChatInterface() {
             }`}
             title="Play last bot message"
             disabled={sessionEnded || isSpeaking}
-          ></button>
+          >
+            {isSpeaking ? "🔊..." : "🔊"}
+          </button>
           <button
             type="submit"
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
@@ -299,7 +322,7 @@ export default function ChatInterface() {
                 }`}
               ></span>
               <span className="text-xs text-gray-500 dark:text-gray-400">
-                {connectionStatus}
+                {isConnected ? "Connected" : "Disconnected"}
               </span>
             </div>
             {role === "admin" && (
