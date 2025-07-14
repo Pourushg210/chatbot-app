@@ -8,7 +8,6 @@ import { logout } from "@/store/slices/authSlice";
 import AnalyticsCharts from "./AnalyticsCharts";
 import BotConfigurationForm from "./BotConfigurationForm";
 import ConfigurationExportImport from "./ConfigurationExportImport";
-import DarkModeToggle from "../ui/DarkModeToggle";
 import { BotConfiguration } from "@/store/slices/chatbotSlice";
 
 export default function Dashboard() {
@@ -95,12 +94,6 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Dark Mode
-                </span>
-                <DarkModeToggle />
-              </div>
               <button
                 onClick={handleNewConfiguration}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"

@@ -9,6 +9,12 @@ import {
 } from "@/store/slices/chatbotSlice";
 import { QuestionFlow, BotConfiguration } from "@/store/slices/chatbotSlice";
 
+type QuestionOption = {
+  label: string;
+  value: string;
+  next?: string | undefined;
+};
+
 interface BotConfigurationFormProps {
   existingConfig?: BotConfiguration;
   onSave?: () => void;
@@ -36,21 +42,44 @@ export default function BotConfigurationForm({
     type: "text",
     required: false,
     options: [],
+    next: undefined,
   });
 
   const addFlow = () => {
     if (!currentFlow.question) return;
+    const newId = Date.now().toString();
+    let newFlow: QuestionFlow;
 
-    const newFlow: QuestionFlow = {
-      id: Date.now().toString(),
-      question: currentFlow.question,
-      type: currentFlow.type || "text",
-      required: currentFlow.required || false,
-      options:
-        currentFlow.type === "multiple_choice" ? currentFlow.options || [] : [],
-      nextStep: currentFlow.nextStep,
-      triggers: currentFlow.triggers || [],
-    };
+    if (
+      currentFlow.type === "multiple_choice" ||
+      currentFlow.type === "yes_no"
+    ) {
+      const options = (currentFlow.options as QuestionOption[]) || [];
+      // Build next map for MCQ/yes_no
+      const nextMap: { [key: string]: string } = {};
+      options.forEach((opt) => {
+        if (opt.next) nextMap[opt.value] = opt.next;
+      });
+      newFlow = {
+        id: newId,
+        question: currentFlow.question!,
+        type: currentFlow.type!,
+        required: currentFlow.required || false,
+        options,
+        next: Object.keys(nextMap).length > 0 ? nextMap : undefined,
+      };
+    } else {
+      newFlow = {
+        id: newId,
+        question: currentFlow.question!,
+        type: "text",
+        required: currentFlow.required || false,
+        next:
+          typeof currentFlow.next === "string" && currentFlow.next !== ""
+            ? currentFlow.next
+            : undefined,
+      };
+    }
 
     setFlows([...flows, newFlow]);
     setCurrentFlow({
@@ -58,6 +87,7 @@ export default function BotConfigurationForm({
       type: "text",
       required: false,
       options: [],
+      next: undefined,
     });
   };
 
@@ -87,6 +117,15 @@ export default function BotConfigurationForm({
     onSave?.();
   };
 
+  const allQuestionOptions = flows.map((f) => ({
+    label: f.question,
+    value: f.id,
+  }));
+  const nextStepOptions = [
+    { label: "End Conversation", value: "" },
+    ...allQuestionOptions,
+  ];
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -96,6 +135,7 @@ export default function BotConfigurationForm({
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Trigger Field */}
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -108,7 +148,7 @@ export default function BotConfigurationForm({
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
               required
             />
           </div>
@@ -125,7 +165,7 @@ export default function BotConfigurationForm({
                   isActive: e.target.value === "active",
                 })
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
             >
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
@@ -143,7 +183,7 @@ export default function BotConfigurationForm({
               setFormData({ ...formData, description: e.target.value })
             }
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
           />
         </div>
 
@@ -169,7 +209,7 @@ export default function BotConfigurationForm({
                   onChange={(e) =>
                     setCurrentFlow({ ...currentFlow, question: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
                   placeholder="Enter your question..."
                 />
               </div>
@@ -187,10 +227,32 @@ export default function BotConfigurationForm({
                         | "text"
                         | "multiple_choice"
                         | "yes_no",
-                      options: e.target.value === "multiple_choice" ? [""] : [],
+                      options:
+                        e.target.value === "multiple_choice"
+                          ? [
+                              {
+                                label: "",
+                                value: "",
+                                next: "",
+                              } as QuestionOption,
+                            ]
+                          : e.target.value === "yes_no"
+                          ? [
+                              {
+                                label: "Yes",
+                                value: "yes",
+                                next: "",
+                              } as QuestionOption,
+                              {
+                                label: "No",
+                                value: "no",
+                                next: "",
+                              } as QuestionOption,
+                            ]
+                          : [],
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
                 >
                   <option value="text">Text Input</option>
                   <option value="multiple_choice">Multiple Choice</option>
@@ -204,45 +266,154 @@ export default function BotConfigurationForm({
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Options
                 </label>
-                {currentFlow.options?.map((option, index) => (
-                  <div key={index} className="flex items-center space-x-2 mb-2">
-                    <input
-                      type="text"
-                      value={option}
-                      onChange={(e) => {
-                        const newOptions = [...(currentFlow.options || [])];
-                        newOptions[index] = e.target.value;
-                        setCurrentFlow({ ...currentFlow, options: newOptions });
-                      }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder={`Option ${index + 1}`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newOptions = currentFlow.options?.filter(
-                          (_, i) => i !== index
-                        );
-                        setCurrentFlow({ ...currentFlow, options: newOptions });
-                      }}
-                      className="px-2 py-2 text-red-600 hover:text-red-800"
+                {(currentFlow.options as QuestionOption[] | undefined)?.map(
+                  (option, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center space-x-2 mb-2"
                     >
-                      ✕
-                    </button>
-                  </div>
-                ))}
+                      <input
+                        type="text"
+                        value={option?.label || ""}
+                        onChange={(e) => {
+                          const newOptions = [
+                            ...((currentFlow.options as QuestionOption[]) ||
+                              []),
+                          ];
+                          newOptions[index] = {
+                            ...newOptions[index],
+                            label: e.target.value,
+                            value: e.target.value
+                              .toLowerCase()
+                              .replace(/\s+/g, "_"),
+                          };
+                          setCurrentFlow({
+                            ...currentFlow,
+                            options: newOptions,
+                          });
+                        }}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                        placeholder={`Option ${index + 1}`}
+                      />
+                      <select
+                        value={option?.next || ""}
+                        onChange={(e) => {
+                          const newOptions = [
+                            ...((currentFlow.options as QuestionOption[]) ||
+                              []),
+                          ];
+                          newOptions[index] = {
+                            ...newOptions[index],
+                            next: e.target.value || undefined,
+                          };
+                          setCurrentFlow({
+                            ...currentFlow,
+                            options: newOptions,
+                          });
+                        }}
+                        className="px-2 py-2 border border-gray-300 rounded-md text-gray-900"
+                      >
+                        {nextStepOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newOptions = (
+                            (currentFlow.options as QuestionOption[]) || []
+                          ).filter((_, i) => i !== index);
+                          setCurrentFlow({
+                            ...currentFlow,
+                            options: newOptions,
+                          });
+                        }}
+                        className="px-2 py-2 text-red-600 hover:text-red-800"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )
+                )}
                 <button
                   type="button"
                   onClick={() =>
                     setCurrentFlow({
                       ...currentFlow,
-                      options: [...(currentFlow.options || []), ""],
+                      options: [
+                        ...((currentFlow.options as QuestionOption[]) || []),
+                        { label: "", value: "", next: "" },
+                      ],
                     })
                   }
                   className="text-sm text-indigo-600 hover:text-indigo-800"
                 >
                   + Add Option
                 </button>
+              </div>
+            )}
+            {currentFlow.type === "yes_no" && (
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Yes/No Branching
+                </label>
+                {["Yes", "No"].map((label, index) => (
+                  <div key={label} className="flex items-center space-x-2 mb-2">
+                    <span className="flex-1 text-gray-900">{label}</span>
+                    <select
+                      value={
+                        (currentFlow.options as QuestionOption[] | undefined)?.[
+                          index
+                        ]?.next || ""
+                      }
+                      onChange={(e) => {
+                        const newOptions = [
+                          ...((currentFlow.options as QuestionOption[]) || []),
+                        ];
+                        newOptions[index] = {
+                          label,
+                          value: label.toLowerCase(),
+                          next: e.target.value || undefined,
+                        };
+                        setCurrentFlow({ ...currentFlow, options: newOptions });
+                      }}
+                      className="px-2 py-2 border border-gray-300 rounded-md text-gray-900"
+                    >
+                      {nextStepOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            )}
+            {currentFlow.type === "text" && (
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Next Question
+                </label>
+                <select
+                  value={
+                    typeof currentFlow.next === "string" ? currentFlow.next : ""
+                  }
+                  onChange={(e) =>
+                    setCurrentFlow({
+                      ...currentFlow,
+                      next: e.target.value || undefined,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900"
+                >
+                  {nextStepOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
 
@@ -280,45 +451,75 @@ export default function BotConfigurationForm({
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm text-gray-900">
                         Q{index + 1}:
                       </span>
-                      <span className="text-sm text-gray-700">
+                      <span className="text-sm text-gray-900">
                         {flow.question}
                       </span>
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          flow.required
-                            ? "bg-red-100 text-red-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {flow.type}
-                      </span>
-                      {flow.required && (
-                        <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
-                          Required
-                        </span>
-                      )}
                     </div>
-
-                    {flow.type === "multiple_choice" && flow.options && (
+                    {(flow.type === "multiple_choice" ||
+                      flow.type === "yes_no") &&
+                      flow.options && (
+                        <div className="ml-4">
+                          <p className="text-xs text-gray-500 mb-1">
+                            Options & Next:
+                          </p>
+                          <div className="flex flex-col gap-1">
+                            {flow.options.map((option, optIndex) => (
+                              <span
+                                key={optIndex}
+                                className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900"
+                              >
+                                {option.label} →{" "}
+                                {typeof flow.next === "object" &&
+                                flow.next !== null &&
+                                flow.next !== undefined &&
+                                flow.next[option.value]
+                                  ? flows.find(
+                                      (f) => f.id === flow.next[option.value]
+                                    )?.question || "[Unknown]"
+                                  : "End Conversation"}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    {flow.type === "yes_no" && flow.options && (
                       <div className="ml-4">
-                        <p className="text-xs text-gray-500 mb-1">Options:</p>
-                        <div className="flex flex-wrap gap-1">
+                        <p className="text-xs text-gray-500 mb-1">
+                          Yes/No Next:
+                        </p>
+                        <div className="flex flex-col gap-1">
                           {flow.options.map((option, optIndex) => (
                             <span
                               key={optIndex}
-                              className="px-2 py-1 text-xs bg-gray-100 rounded"
+                              className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900"
                             >
-                              {option}
+                              {option.label} →{" "}
+                              {option.next
+                                ? flows.find((f) => f.id === option.next)
+                                    ?.question || "[Unknown]"
+                                : "End Conversation"}
                             </span>
                           ))}
                         </div>
                       </div>
                     )}
+                    {flow.type === "text" && (
+                      <div className="ml-4">
+                        <p className="text-xs text-gray-500 mb-1">Next:</p>
+                        <span className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900">
+                          {typeof flow.next === "string" &&
+                          flow.next !== undefined &&
+                          flow.next
+                            ? flows.find((f) => f.id === flow.next)?.question ||
+                              "[Unknown]"
+                            : "End Conversation"}
+                        </span>
+                      </div>
+                    )}
                   </div>
-
                   <button
                     type="button"
                     onClick={() => removeFlow(flow.id)}

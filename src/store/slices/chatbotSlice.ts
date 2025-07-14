@@ -1,13 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface QuestionOption {
+  label: string;
+  value: string;
+  next?: string;
+}
+
 export interface QuestionFlow {
   id: string;
   question: string;
   type: "text" | "multiple_choice" | "yes_no";
-  options?: string[];
+  options?: QuestionOption[];
   required: boolean;
-  nextStep?: string;
-  triggers?: string[];
+  next?: string | { [answer: string]: string };
 }
 
 export interface BotConfiguration {
@@ -40,24 +45,38 @@ const initialState: ChatbotState = {
           question: "What type of issue are you experiencing?",
           type: "multiple_choice",
           options: [
-            "Technical Problem",
-            "Billing Issue",
-            "Account Access",
-            "General Inquiry",
+            { label: "Technical Problem", value: "Technical Problem" },
+            { label: "Billing Issue", value: "Billing Issue" },
+            { label: "Account Access", value: "Account Access" },
+            { label: "General Inquiry", value: "General Inquiry" },
           ],
           required: true,
+          next: {
+            "Technical Problem": "1-2",
+            "Billing Issue": "1-2",
+            "Account Access": "1-2",
+            "General Inquiry": "1-3",
+          },
         },
         {
           id: "1-2",
           question: "Please describe your issue in detail",
           type: "text",
           required: true,
+          next: {
+            "": "1-3",
+          },
         },
         {
           id: "1-3",
           question: "What is your priority level?",
           type: "multiple_choice",
-          options: ["Low", "Medium", "High", "Critical"],
+          options: [
+            { label: "Low", value: "Low" },
+            { label: "Medium", value: "Medium" },
+            { label: "High", value: "High" },
+            { label: "Critical", value: "Critical" },
+          ],
           required: true,
         },
       ],
@@ -75,18 +94,27 @@ const initialState: ChatbotState = {
           question: "What is your company size?",
           type: "multiple_choice",
           options: [
-            "1-10 employees",
-            "11-50 employees",
-            "51-200 employees",
-            "200+ employees",
+            { label: "1-10 employees", value: "1-10 employees" },
+            { label: "11-50 employees", value: "11-50 employees" },
+            { label: "51-200 employees", value: "51-200 employees" },
+            { label: "200+ employees", value: "200+ employees" },
           ],
           required: true,
+          next: {
+            "1-10 employees": "2-2",
+            "11-50 employees": "2-2",
+            "51-200 employees": "2-2",
+            "200+ employees": "2-2",
+          },
         },
         {
           id: "2-2",
           question: "What is your primary business need?",
           type: "text",
           required: true,
+          next: {
+            "": "2-3",
+          },
         },
         {
           id: "2-3",
