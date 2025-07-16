@@ -18,7 +18,6 @@ export default function VoiceTest() {
   const [selectedVoice, setSelectedVoice] = useState("default");
   const [pitch, setPitch] = useState(1);
   const [rate, setRate] = useState(1);
-  const [volume, setVolume] = useState(1);
   const [language, setLanguage] = useState("en-US");
 
   useEffect(() => {
@@ -79,8 +78,7 @@ export default function VoiceTest() {
         voice: selectedVoice,
         pitch,
         rate,
-        volume,
-        language,
+        volume: 1,
       });
     } catch (error) {
       console.error("Speech synthesis error:", error);
@@ -319,16 +317,16 @@ export default function VoiceTest() {
               </p>
               <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-1">
                 <li>
-                  <strong>"repeat"</strong> - Repeats the test text
+                  <strong>&quot;repeat&quot;</strong> - Repeats the test text
                 </li>
                 <li>
-                  <strong>"clear"</strong> - Clears the transcript
+                  <strong>&quot;clear&quot;</strong> - Clears the transcript
                 </li>
                 <li>
-                  <strong>"help"</strong> - Speaks available commands
+                  <strong>&quot;help&quot;</strong> - Speaks available commands
                 </li>
                 <li>
-                  <strong>"stop"</strong> - Stops current speech
+                  <strong>&quot;stop&quot;</strong> - Stops current speech
                 </li>
               </ul>
             </div>
