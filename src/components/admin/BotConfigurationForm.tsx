@@ -139,7 +139,7 @@ export default function BotConfigurationForm({
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Bot Name
             </label>
             <input
@@ -148,13 +148,13 @@ export default function BotConfigurationForm({
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Status
             </label>
             <select
@@ -165,7 +165,7 @@ export default function BotConfigurationForm({
                   isActive: e.target.value === "active",
                 })
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
             >
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
@@ -174,7 +174,7 @@ export default function BotConfigurationForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
             Description
           </label>
           <textarea
@@ -183,7 +183,7 @@ export default function BotConfigurationForm({
               setFormData({ ...formData, description: e.target.value })
             }
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
           />
         </div>
 
@@ -200,7 +200,7 @@ export default function BotConfigurationForm({
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   Question
                 </label>
                 <input
@@ -209,13 +209,13 @@ export default function BotConfigurationForm({
                   onChange={(e) =>
                     setCurrentFlow({ ...currentFlow, question: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
                   placeholder="Enter your question..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   Question Type
                 </label>
                 <select
@@ -252,7 +252,7 @@ export default function BotConfigurationForm({
                           : [],
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
                 >
                   <option value="text">Text Input</option>
                   <option value="multiple_choice">Multiple Choice</option>
@@ -263,7 +263,7 @@ export default function BotConfigurationForm({
 
             {currentFlow.type === "multiple_choice" && (
               <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   Options
                 </label>
                 {(currentFlow.options as QuestionOption[] | undefined)?.map(
@@ -292,7 +292,7 @@ export default function BotConfigurationForm({
                             options: newOptions,
                           });
                         }}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
                         placeholder={`Option ${index + 1}`}
                       />
                       <select
@@ -311,7 +311,7 @@ export default function BotConfigurationForm({
                             options: newOptions,
                           });
                         }}
-                        className="px-2 py-2 border border-gray-300 rounded-md text-gray-900"
+                        className="px-2 py-2 border border-gray-300 rounded-md text-gray-900 dark:text-white"
                       >
                         {nextStepOptions.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -356,12 +356,14 @@ export default function BotConfigurationForm({
             )}
             {currentFlow.type === "yes_no" && (
               <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   Yes/No Branching
                 </label>
                 {["Yes", "No"].map((label, index) => (
                   <div key={label} className="flex items-center space-x-2 mb-2">
-                    <span className="flex-1 text-gray-900">{label}</span>
+                    <span className="flex-1 text-gray-900 dark:text-white">
+                      {label}
+                    </span>
                     <select
                       value={
                         (currentFlow.options as QuestionOption[] | undefined)?.[
@@ -379,7 +381,7 @@ export default function BotConfigurationForm({
                         };
                         setCurrentFlow({ ...currentFlow, options: newOptions });
                       }}
-                      className="px-2 py-2 border border-gray-300 rounded-md text-gray-900"
+                      className="px-2 py-2 border border-gray-300 rounded-md text-gray-900 dark:text-white"
                     >
                       {nextStepOptions.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -393,7 +395,7 @@ export default function BotConfigurationForm({
             )}
             {currentFlow.type === "text" && (
               <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   Next Question
                 </label>
                 <select
@@ -406,7 +408,7 @@ export default function BotConfigurationForm({
                       next: e.target.value || undefined,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 dark:text-white"
                 >
                   {nextStepOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -451,10 +453,10 @@ export default function BotConfigurationForm({
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm text-gray-900 dark:text-white">
                         Q{index + 1}:
                       </span>
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm text-gray-900 dark:text-white">
                         {flow.question}
                       </span>
                     </div>
@@ -469,7 +471,7 @@ export default function BotConfigurationForm({
                             {flow.options.map((option, optIndex) => (
                               <span
                                 key={optIndex}
-                                className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900"
+                                className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900 dark:text-white"
                               >
                                 {option.label} →{" "}
                                 {typeof flow.next === "object" &&
@@ -503,7 +505,7 @@ export default function BotConfigurationForm({
                           {flow.options.map((option, optIndex) => (
                             <span
                               key={optIndex}
-                              className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900"
+                              className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900 dark:text-white"
                             >
                               {option.label} →{" "}
                               {option.next
@@ -518,7 +520,7 @@ export default function BotConfigurationForm({
                     {flow.type === "text" && (
                       <div className="ml-4">
                         <p className="text-xs text-gray-500 mb-1">Next:</p>
-                        <span className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900">
+                        <span className="px-2 py-1 text-xs bg-gray-100 rounded text-gray-900 dark:text-white">
                           {typeof flow.next === "string" &&
                           flow.next !== undefined &&
                           flow.next

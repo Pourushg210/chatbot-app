@@ -41,25 +41,31 @@ export default function LoginForm() {
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto mt-12 p-6 bg-white dark:bg-gray-800 rounded shadow"
     >
-      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center text-gray-700 dark:text-gray-200">
+        Login
+      </h2>
       {error && <div className="mb-4 text-red-500">{error}</div>}
       <div className="mb-4">
-        <label className="block mb-1">Username</label>
+        <label className="block mb-1 text-gray-700 dark:text-gray-200">
+          Username
+        </label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="w-full px-3 py-2 border rounded text-gray-900 dark:text-white"
           required
         />
       </div>
       <div className="mb-6">
-        <label className="block mb-1">Password</label>
+        <label className="block mb-1 text-gray-700 dark:text-gray-200">
+          Password
+        </label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="w-full px-3 py-2 border rounded text-gray-900 dark:text-white"
           required
         />
       </div>

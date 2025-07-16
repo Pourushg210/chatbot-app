@@ -197,7 +197,7 @@ export default function VoiceTest() {
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Test Text
                 </label>
                 <textarea
@@ -241,7 +241,7 @@ export default function VoiceTest() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Voice
                 </label>
                 <select
@@ -259,7 +259,7 @@ export default function VoiceTest() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Language
                 </label>
                 <select
@@ -276,7 +276,7 @@ export default function VoiceTest() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Pitch: {pitch.toFixed(1)}
                 </label>
                 <input
@@ -291,7 +291,7 @@ export default function VoiceTest() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Speed: {rate.toFixed(1)}x
                 </label>
                 <input

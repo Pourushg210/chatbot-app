@@ -226,7 +226,7 @@ export default function ChatInterface() {
                 sendTypingIndicator(currentConversation.id, true);
               }
             }}
-            className="flex-1 px-4 py-2 border rounded"
+            className="flex-1 px-4 py-2 border rounded text-gray-900 dark:text-white"
             placeholder={
               isListening
                 ? interimTranscript || "Listening..."
