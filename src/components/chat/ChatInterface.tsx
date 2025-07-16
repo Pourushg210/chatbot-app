@@ -7,6 +7,7 @@ import VoiceSettings from "./VoiceSettings";
 import { useRouter } from "next/navigation";
 import voiceService from "@/services/voiceService";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { LogOut } from "lucide-react";
 
 export default function ChatInterface() {
   const [inputMessage, setInputMessage] = useState("");
@@ -167,6 +168,10 @@ export default function ChatInterface() {
       } catch {}
       setIsSpeaking(false);
     }
+  };
+
+  const handleLogout = () => {
+    router.push("/auth/login");
   };
 
   // Render input based on current question type
@@ -333,6 +338,12 @@ export default function ChatInterface() {
                 Admin Mode
               </button>
             )}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-800 rounded-full transition"
+            >
+              <LogOut className="h-6 w-6" />
+            </button>
           </div>
         </div>
       </div>
