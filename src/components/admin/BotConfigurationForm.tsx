@@ -474,10 +474,19 @@ export default function BotConfigurationForm({
                                 {option.label} →{" "}
                                 {typeof flow.next === "object" &&
                                 flow.next !== null &&
-                                flow.next !== undefined &&
-                                flow.next[option.value]
+                                (flow.next as { [answer: string]: string })[
+                                  option.value
+                                ]
                                   ? flows.find(
-                                      (f) => f.id === flow.next[option.value]
+                                      (f) =>
+                                        typeof flow.next === "object" &&
+                                        flow.next !== null &&
+                                        f.id ===
+                                          (
+                                            flow.next as {
+                                              [answer: string]: string;
+                                            }
+                                          )[option.value]
                                     )?.question || "[Unknown]"
                                   : "End Conversation"}
                               </span>

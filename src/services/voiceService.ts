@@ -42,26 +42,50 @@ class VoiceService {
     rate: 1,
     volume: 1,
   };
+  private initialized = false; // Prevent double init
 
-  constructor() {
-    this.initializeSpeechRecognition();
-    this.initializeSpeechSynthesis();
+  // Remove window usage from constructor
+  constructor() {}
+
+  // Call this from useEffect in the client
+  public initialize() {
+    if (this.initialized) return;
+    if (typeof window !== "undefined") {
+      this.initializeSpeechRecognition();
+      this.initializeSpeechSynthesis();
+      this.initialized = true;
+    }
   }
 
   private initializeSpeechRecognition() {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (SpeechRecognition) {
-      this.recognition = new SpeechRecognition();
-      this.recognition.continuous = false;
-      this.recognition.interimResults = true;
-      this.recognition.lang = this.config.language ?? "en-US";
+    if (
+      typeof window !== "undefined" &&
+      ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
+    ) {
+      const SpeechRecognition =
+        (
+          window as {
+            SpeechRecognition?: typeof window.SpeechRecognition;
+            webkitSpeechRecognition?: typeof window.SpeechRecognition;
+          }
+        ).SpeechRecognition ||
+        (
+          window as {
+            SpeechRecognition?: typeof window.SpeechRecognition;
+            webkitSpeechRecognition?: typeof window.SpeechRecognition;
+          }
+        ).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = false;
+        this.recognition.interimResults = true;
+        this.recognition.lang = this.config.language || "en-US";
+      }
     }
   }
 
   private initializeSpeechSynthesis() {
-    if ("speechSynthesis" in window) {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
       this.synthesis = window.speechSynthesis;
     }
   }

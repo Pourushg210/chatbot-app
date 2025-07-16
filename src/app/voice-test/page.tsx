@@ -21,6 +21,7 @@ export default function VoiceTest() {
   const [language, setLanguage] = useState("en-US");
 
   useEffect(() => {
+    voiceService.initialize();
     setVoiceSupported(voiceService.isSupported());
     setAvailableVoices(voiceService.getAvailableVoices());
   }, []);
