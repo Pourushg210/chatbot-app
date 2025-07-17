@@ -5,8 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import { addMessage, startConversation } from "@/store/slices/chatSlice";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { useRouter } from "next/navigation";
 
 export default function WebSocketTest() {
+  const router = useRouter();
   const [inputMessage, setInputMessage] = useState("");
   const [testConversationId] = useState("test-conversation-" + Date.now());
 
@@ -65,6 +67,14 @@ export default function WebSocketTest() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+      <div className="mb-6">
+        <button
+          onClick={() => router.back()}
+          className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 mb-4"
+        >
+          ← Home
+        </button>
+      </div>
       <div className="max-w-4xl mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
