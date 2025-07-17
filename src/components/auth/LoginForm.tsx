@@ -41,6 +41,14 @@ export default function LoginForm() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen items-stretch justify-center bg-white dark:bg-gray-900 relative">
+      {/* Absolutely positioned Back button */}
+      <button
+        onClick={() => router.back()}
+        className="flex items-center text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 absolute top-4 left-2 md:top-6 md:left-4 z-10"
+      >
+        <span className="mr-1 text-lg">←</span>
+        <span>Back</span>
+      </button>
       {/* Image Section */}
       <div className="w-full md:w-1/2 h-64 md:h-screen relative flex justify-center items-center p-0 md:p-0">
         <Image
